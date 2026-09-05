@@ -35,10 +35,8 @@ export const UserSelector: React.FC<Props> = ({
       }
     };
 
-    // Вішаємо слухач події при монтуванні
     document.addEventListener('click', handleOutsideClick);
 
-    // Прибираємо слухач події при розмонтуванні (запобігає витоку пам'яті)
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
@@ -58,9 +56,7 @@ export const UserSelector: React.FC<Props> = ({
           aria-controls="dropdown-menu"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
-          <span onClick={() => setIsDropdownOpen(prev => !prev)}>
-            {selectedUser?.name || 'Choose a user'}
-          </span>
+          <span>{selectedUser?.name || 'Choose a user'}</span>
 
           <span className="icon is-small">
             <i className="fas fa-angle-down" aria-hidden="true" />

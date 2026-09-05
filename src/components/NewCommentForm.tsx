@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
-  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [commentName, setCommentName] = useState('');
   const [hasNameError, setHasNameError] = useState(false);
@@ -30,7 +30,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
     resetErrors();
   }
 
-  function handleSummit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setHasNameError(!commentName);
@@ -48,18 +48,18 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
       body: commentBody,
     };
 
-    setIsSubmiting(true);
+    setIsSubmitting(true);
 
     onSubmit(newCommentData)
       .then(() => {
         setCommentBody('');
         resetErrors();
       })
-      .finally(() => setIsSubmiting(false));
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
-    <form data-cy="NewCommentForm" onSubmit={handleSummit}>
+    <form data-cy="NewCommentForm" onSubmit={handleSubmit}>
       <div className="field" data-cy="NameField">
         <label className="label" htmlFor="comment-author-name">
           Author Name
@@ -115,7 +115,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
             value={commentEmail}
             onChange={e => setCommentEmail(e.currentTarget.value)}
             onBlur={() => {
-              setHasNameError(!commentEmail);
+              setHasEmailError(!commentEmail);
             }}
           />
 
@@ -133,7 +133,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
           )}
         </div>
 
-        {hasEmailError && commentEmail.length === 0 && (
+        {hasEmailError && (
           <p className="help is-danger" data-cy="ErrorMessage">
             Email is required
           </p>
@@ -153,7 +153,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
             value={commentBody}
             onChange={e => setCommentBody(e.currentTarget.value)}
             onBlur={() => {
-              setHasNameError(!commentBody);
+              setHasBodyError(!commentBody);
             }}
           />
         </div>
@@ -170,7 +170,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
           <button
             type="submit"
             className={classNames('button is-link', {
-              'is-loading': isSubmiting,
+              'is-loading': isSubmitting,
             })}
           >
             Add
@@ -183,7 +183,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onSubmit }) => {
             type="reset"
             className="button is-link is-light"
             onClick={() => clear()}
-            disabled={isSubmiting}
+            disabled={isSubmitting}
           >
             Clear
           </button>
