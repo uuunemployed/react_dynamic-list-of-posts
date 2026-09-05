@@ -3,7 +3,7 @@ import { Loader } from './Loader';
 import { NewCommentForm } from './NewCommentForm';
 import { Post } from '../types/Post';
 import { Comment, NewCommentData } from '../types/Comment';
-import { createComent, deleteComment, getComments } from '../servises/coments';
+import { createComment, deleteComment, getComments } from '../servises/coments';
 
 type Props = {
   openPost: Post | null;
@@ -32,25 +32,27 @@ export const PostDetails: React.FC<Props> = ({ openPost }) => {
       });
   }, [openPost?.id]);
 
-  function handleDeleteComment(comment: Comment) {
+  function handleDeleteComment(commentToDelete: Comment) {
     setError(false);
-    deleteComment(comment.id)
-      .then(() => {
-        // ✅ Оновлюємо UI тільки після успішного видалення на сервері
-        setComments(prev =>
-          prev ? prev.filter(item => item.id !== comment.id) : [],
-        );
-      })
-      .catch(er => {
-        setError(true);
-        throw er;
-      });
+
+    setComments(prev =>
+      prev ? prev.filter(c => c.id !== commentToDelete.id) : [],
+    );
+
+    deleteComment(commentToDelete.id).catch(er => {
+      setError(true);
+
+      setComments(prev =>
+        prev ? [...prev, commentToDelete] : [commentToDelete],
+      );
+      throw er;
+    });
   }
 
   function handleCreateComment(newCommentData: NewCommentData) {
     setError(false);
 
-    return createComent(newCommentData)
+    return createComment(newCommentData)
       .then(createdComment => {
         setComments(prev =>
           prev ? [...prev, createdComment] : [createdComment],
